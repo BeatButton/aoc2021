@@ -8,6 +8,12 @@ class Space:
         self.over = over
         self.hit = False
 
+    def __repr__(self):
+        out = str(self.val)
+        if self.hit:
+            out = f"*{out}"
+        return out
+
 
 class Board:
     row_map: dict[int, Space]
@@ -40,6 +46,9 @@ class Board:
     def score(self):
         return sum(space.val for space in self.row_map.values() if not space.hit)
 
+    def __repr__(self):
+        return repr(self.spaces)
+
 
 with open(Path(__file__).with_name("input")) as fp:
     inp = fp.read().strip()
@@ -54,16 +63,32 @@ while i < len(lines):
     boards.append(Board(lines[i : i + 5]))
     i += 6
 
-for call in calls:
+loser = None
+for i in range(len(calls)):
+    call = calls[i]
+    print(call)
     for board in boards:
         if space := board.row_map.get(call):
             space.hit = True
+    loser = None
     for board in boards:
-        if board.winning:
-            winner = board
-            break
+        if not board.winning:
+            if loser is None:
+                loser = board
+            else:
+                break
     else:
-        continue
-    break
+        break
 
-print(winner.score * call)
+assert loser is not None
+
+while True:
+    i += 1
+    call = calls[i]
+    print(call)
+    if space := loser.row_map.get(call):
+        space.hit = True
+    if loser.winning:
+        break
+
+print(loser.score * call)

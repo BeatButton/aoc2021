@@ -4,33 +4,21 @@ with open(Path(__file__).with_name("input")) as fp:
     inp = fp.read().strip()
 
 
-class Fish:
-    def __init__(self, timer=8):
-        self.timer = timer
-
-    def __repr__(self):
-        return str(self.timer)
-
-
-fish = []
+timers = [0] * 9
 
 for n in map(int, inp.split(",")):
-    fish.append(Fish(n))
+    timers[n] += 1
 
 
 def tick():
-    new = 0
-    for f in fish:
-        if f.timer == 0:
-            f.timer = 6
-            new += 1
-        else:
-            f.timer -= 1
-    fish.extend(Fish() for _ in range(new))
+    new = timers[0]
+    for i, j in zip(range(8), range(1, 9)):
+        timers[i] = timers[j]
+    timers[8] = new
+    timers[6] += new
 
 
-for i in range(80):
-    print(i)
+for i in range(256):
     tick()
 
-print(len(fish))
+print(sum(timers))

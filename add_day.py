@@ -33,6 +33,9 @@ def make_day(day: int, input: bytes):
     with open(path / "input", "wb") as fp:
         fp.write(input)
 
+    with open(path / "test", "w"):
+        pass
+
     with open(path / "main.py", "w") as fp:
         fp.write(source_template)
 

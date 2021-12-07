@@ -6,15 +6,22 @@ with open(Path(__file__).with_name("input")) as fp:
 crabs = eval(f"[{inp}]")
 crabs.sort()
 
-L = len(crabs)
-half = L // 2 - 1
+min_ans = 99 ** 99
+for avg in range(0, crabs[-1]):
+    ans = 0
 
-if L % 2 == 0:
-    med = (crabs[half] + crabs[half + 1]) // 2
-else:
-    med = crabs[half]
-
-print(med)
-ans = sum(abs(crab - med) for crab in crabs)
-
-print(ans)
+    for crab in crabs:
+        if crab == avg:
+            continue
+        elif crab < avg:
+            delta = 1
+        else:
+            delta = -1
+        step = 1
+        while crab != avg:
+            crab += delta
+            ans += step
+            step += 1
+    if ans < min_ans:
+        min_ans = ans
+    print(f"{avg}: {min_ans}")

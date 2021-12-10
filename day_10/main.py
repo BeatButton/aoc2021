@@ -4,19 +4,31 @@ with open(Path(__file__).with_name("input")) as fp:
     inp = fp.read().strip()
 
 
-stack = []
-
 pts = {")": 3, "]": 57, "}": 1197, ">": 25137}
 
-m = dict(zip("([{<", ")]}>"))
 
-ans = 0
-for line in inp:
-    for c in line.strip():
+m = dict(zip("([{<", ")]}>"))
+opens = list(m)
+
+lines = inp.splitlines()
+rest = []
+for line in lines:
+    stack = []
+    for c in line:
         if c in m:
             stack.append(c)
         elif c != m[stack.pop()]:
-            ans += pts[c]
             break
+    else:
+        rest.append(stack)
 
-print(ans)
+scores = []
+for stack in rest:
+    score = 0
+    for c in stack[::-1]:
+        score *= 5
+        score += opens.index(c) + 1
+    scores.append(score)
+
+scores.sort()
+print(scores[len(scores) // 2])

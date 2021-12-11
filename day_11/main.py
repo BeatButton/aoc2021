@@ -37,12 +37,13 @@ def step():
 
 flashed = set()
 
-ans = 0
-for i in range(100):
+from itertools import count
+
+for i in count(1):
     step()
-    ans += len(flashed)
+    if len(flashed) == w * h:
+        print(i)
+        break
     for x, y in flashed:
         es[x][y] = 0
     flashed = set()
-
-print(ans)

@@ -20,19 +20,23 @@ for line in inp.splitlines():
         m[t].append(f)
 
 
+def visitable(c, seen):
+    return not set(c) < small or c not in seen or max(seen.values()) == 1
+
+
 def visit(now, orig_seen, path):
     nexts = m[now]
-    for n in filter(lambda n: not n in orig_seen, nexts):
+    for n in filter(lambda n: visitable(n, orig_seen), nexts):
         seen = orig_seen.copy()
         if n == "end":
             yield path + [n]
             continue
         if set(n) < small:
-            seen |= {n}
+            seen[n] += 1
         yield from visit(n, seen, path + [n])
 
 
-paths = list(visit("start", set(), ["start"]))
+paths = list(visit("start", defaultdict(int), ["start"]))
 
 
 print(len(paths))

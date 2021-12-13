@@ -31,27 +31,22 @@ for fold in folds:
     if direction == "y":
         for y in range(value):
             for x in range(w):
-                grid[y][x] += grid[h - y - 1][x]
+                grid[y][x] += grid[2 * value - y][x]
         h //= 2
     elif direction == "x":
         for y in range(h):
             for x in range(value):
-                grid[y][x] += grid[y][w - x - 1]
+                grid[y][x] += grid[y][2 * value - x]
         w //= 2
     else:
         print("you fucking idiot")
-    break
 
 
-ans = 0
 for y in range(h):
     for x in range(w):
         if grid[y][x]:
-            # print("#", end="")
-            ans += 1
+            print("#", end="")
         else:
-            # print(".", end="")
+            print(".", end="")
             pass
-    # print()
-
-print(ans)
+    print()

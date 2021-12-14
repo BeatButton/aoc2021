@@ -1,32 +1,46 @@
+from collections import Counter, defaultdict
 from pathlib import Path
 
-with open(Path(__file__).with_name("input")) as fp:
+with open(Path(__file__).with_name("test")) as fp:
     inp = fp.read().strip()
 
 lines = iter(inp.splitlines())
-state = list(next(lines))
+init = next(lines)
+
+state = defaultdict(int)
+
+start = init[:2]
+end = init[-2:]
+for a, b in zip(init, init[1:]):
+    state[a + b] += 1
+
 next(lines)
 rules = {}
 for line in lines:
     pair, insert = line.split(" -> ")
-    rules[pair] = insert
+    rules[pair] = (pair[0] + insert, insert + pair[1])
 
 
-for i in range(10):
-    inserts = [""] * (len(state) - 1)
-    for j, (a, b) in enumerate(zip(state, state[1:])):
-        if r := rules.get(a + b):
-            inserts[j] = r
-    new_state = []
-    for a, b in zip(state, inserts):
-        new_state.append(a)
-        if b:
-            new_state.append(b)
-    state = new_state + [state[-1]]
+for i in range(40):
+    new = state.copy()
+    start = rules[start][0]
+    end = rules[end][1]
+    for pair, amt in state.items():
+        for add in rules[pair]:
+            new[add] += amt
+        new[pair] -= amt
+    state = new
 
-from collections import Counter
+c = Counter()
 
-c = Counter(state)
+m = len(state)
+for i, (pair, amt) in enumerate(state.items()):
+    c[pair[0]] += amt
+    c[pair[1]] += amt
+
+c[start[0]] += 1
+c[end[1]] += 1
 com = c.most_common()
-ans = com[0][1] - com[-1][1]
+ans = com[0][1] // 2 - com[-1][1] // 2
+
 print(ans)

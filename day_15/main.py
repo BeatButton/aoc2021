@@ -1,7 +1,7 @@
-from dataclasses import dataclass
 from pathlib import Path
+import heapq
 
-with open(Path(__file__).with_name("test")) as fp:
+with open(Path(__file__).with_name("input")) as fp:
     inp = fp.read().strip()
 
 INF = float("inf")
@@ -9,19 +9,20 @@ INF = float("inf")
 
 def adj(xy):
     x, y = xy
-    return [(x + 1, y), (x, y + 1)]
+    return [(x + 1, y), (x, y + 1), (x - 1, y), (x, y - 1)]
 
 
 grid = {}
 dist = {}
+unvisited = []
 for y, line in enumerate(inp.splitlines()):
     for x, cost in enumerate(map(int, line)):
         grid[x, y] = cost
         dist[x, y] = INF
+        unvisited.append((x, y))
 
-curr = 0, 0
-dist[curr] = grid[curr]
-unvisited = [(nx, ny) for nx in range(x) for ny in range(y)]
+dist[0, 0] = 0
+unvisited[:] = unvisited[1:] + [(0, 0)]  # lol
 
 while unvisited:
     curr = unvisited.pop()
@@ -30,7 +31,8 @@ while unvisited:
             cost = grid[nxt]
         except KeyError:
             continue
-        dist[nxt] = dist[curr] + cost
+        dist[nxt] = min(dist[nxt], dist[curr] + cost)
     unvisited.sort(key=lambda p: dist[p], reverse=True)
 
-print(dist[x - 1, y - 1])
+
+print(dist[max(grid)])

@@ -1,3 +1,5 @@
+from copy import deepcopy
+from itertools import permutations
 from pathlib import Path
 
 with open(Path(__file__).with_name("input")) as fp:
@@ -119,11 +121,13 @@ for line in inp.splitlines():
     nums.append(eval(line))
 
 
-nums.reverse()
-curr = nums.pop()
+ans = 0
 
-for num in nums[::-1]:
-    curr = add(curr, num)
-    reduce(curr)
+for n, m in permutations(nums, r=2):
+    n = deepcopy(n)
+    m = deepcopy(m)
+    a = add(n, m)
+    reduce(a)
+    ans = max(ans, magnitude(a))
 
-print(magnitude(curr))
+print(ans)

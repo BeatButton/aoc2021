@@ -46,6 +46,9 @@ class Point:
     def flip_z(self) -> Point:
         return Point(self.y, self.x, -self.z)
 
+    def manhattan_distance(self, other):
+        return abs(self.x - other.x) + abs(self.y - other.y) + abs(self.z - other.z)
+
 
 scanners: list[set[Point]] = []
 reality: set[Point] = set()
@@ -106,4 +109,8 @@ while scanners:
         break
     del scanners[i]
 
-print(len(reality))
+ans = 0
+for (a, _), (b, _) in permutations(scanners_ind, r=2):
+    ans = max(ans, a.manhattan_distance(b))
+
+print(ans)

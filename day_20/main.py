@@ -44,7 +44,7 @@ def pprint(pixels):
     print()
 
 
-for i in range(2):
+for i in range(50):
     new = pixels.copy()
     minx, miny = mins(pixels)
     maxx, maxy = maxs(pixels)
